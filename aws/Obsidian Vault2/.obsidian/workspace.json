@@ -1,0 +1,199 @@
+{
+  "main": {
+    "id": "23c990098e14d74f",
+    "type": "split",
+    "children": [
+      {
+        "id": "434e703db6ad4392",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "204581332e2e7566",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "グラフビュー"
+            }
+          },
+          {
+            "id": "d7e2dd3725028976",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "AWS基礎知識.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "AWS基礎知識"
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7863bd8e1231c67e",
+    "type": "split",
+    "children": [
+      {
+        "id": "13367ce30445b22b",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "9ea87944274e4afc",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "ファイルエクスプローラ"
+            }
+          },
+          {
+            "id": "6ab25f6901738090",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "検索"
+            }
+          },
+          {
+            "id": "aa641debb155f526",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "ブックマーク"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 200
+  },
+  "right": {
+    "id": "730971ef55e66443",
+    "type": "split",
+    "children": [
+      {
+        "id": "9e37e878eddfab26",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "51492194d2094853",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "AWS基礎知識.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "AWS基礎知識へのバックリンク"
+            }
+          },
+          {
+            "id": "e81e3c082a838661",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "AWS基礎知識.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "AWS基礎知識からのアウトゴーイングリンク"
+            }
+          },
+          {
+            "id": "bc7b7e39f67b0503",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "タグ"
+            }
+          },
+          {
+            "id": "0d56e4d5acde5fe7",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "AWS基礎知識.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "AWS基礎知識のアウトライン"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:クイックスイッチャーを開く": false,
+      "graph:グラフビューを開く": false,
+      "canvas:新規キャンバスを作成": false,
+      "daily-notes:今日のデイリーノートを開く": false,
+      "templates:テンプレートを挿入": false,
+      "command-palette:コマンドパレットを開く": false
+    }
+  },
+  "active": "d7e2dd3725028976",
+  "lastOpenFiles": [
+    "無題のファイル 1.canvas",
+    "無題のファイル.canvas",
+    "AWS基礎知識.md",
+    "Pasted image 20250701200633.png",
+    "Pasted image 20250701200354.png",
+    "Pasted image 20250701183916.png",
+    "Pasted image 20250701183801.png",
+    "Pasted image 20250701183640.png",
+    "Pasted image 20250701183535.png",
+    "Pasted image 20250701183434.png",
+    "Pasted image 20250701180710.png",
+    "Pasted image 20250701180601.png",
+    "Pasted image 20250701180419.png",
+    "Welcome.md"
+  ]
+}
