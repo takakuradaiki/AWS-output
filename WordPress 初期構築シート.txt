@@ -1,0 +1,138 @@
+======================================================================
+  ◆ CentOS Stream 9  ×  Apache 2.4.62  ×  PHP 8.3  ×  MariaDB 10.11
+  ◆ WordPress 6.6  ―  さくら VPS 1 GB プラン　“コピペで構築” 手順
+  ◆ 大項目ごとに見出し → 各行「コマンド → すぐ下に説明」
+======================================================================
+
+────────────────────────────────────────
+【0. SSH 接続＆事前クリア】
+────────────────────────────────────────
+ssh -i C:\Users\megav\.ssh\id_rsa root@<VPS_IP>
+    VPS に root でログイン
+ssh-keygen -R <VPS_IP>
+    旧ホスト鍵が衝突するときに削除（不要ならスキップ）
+
+────────────────────────────────────────
+【1. OS 更新 & スワップ確保】
+────────────────────────────────────────
+dnf -y update
+    パッケージを最新に更新
+fallocate -l 1G /swapfile && chmod 600 /swapfile
+    1 GB スワップファイルを作成し権限 600
+mkswap /swapfile && swapon /swapfile
+    スワップとして初期化し即有効化
+echo '/swapfile none swap sw 0 0' >> /etc/fstab
+    再起動後もスワップを維持
+
+────────────────────────────────────────
+【2. 追加リポジトリ登録】
+────────────────────────────────────────
+dnf -y install epel-release
+    EPEL を追加
+dnf -y install https://rpms.remirepo.net/enterprise/remi-release-9.rpm
+    Remi（PHP 8.3）リポジトリを追加
+curl -o /etc/yum.repos.d/MariaDB.repo https://rpm.mariadb.org/mariadb.repo
+    MariaDB 10.11 公式リポジトリを配置
+dnf clean all
+    メタデータをリフレッシュ
+
+────────────────────────────────────────
+【3. Web / PHP / DB 基本ソフト導入】
+────────────────────────────────────────
+dnf module reset php -y && dnf module enable php:remi-8.3 -y
+    既存 PHP を無効化し PHP 8.3 ストリームを有効
+dnf -y install httpd php php-mysqlnd php-mbstring php-xml php-gd unzip rsync
+    Apache 2.4.62・PHP 8.3 と拡張、unzip/rsync を導入
+dnf -y install mariadb-server mariadb
+    MariaDB 10.11 サーバー＆クライアント
+systemctl enable --now httpd mariadb
+    Apache / MariaDB を起動し自動起動登録
+systemctl enable --now firewalld
+    firewalld を起動して自動起動登録
+
+────────────────────────────────────────
+【4. MariaDB 初期設定 & WP 用 DB】
+────────────────────────────────────────
+mysql_secure_installation
+    対話ツール：すべて y、root パスワード = takachan123
+mysql -u root -ptakachan123 -e \
+"CREATE DATABASE wp2025 DEFAULT CHARSET utf8mb4;
+ CREATE USER 'wpuser2025'@'localhost' IDENTIFIED BY 'Str0ng_DBpass!';
+ GRANT ALL ON wp2025.* TO 'wpuser2025'@'localhost';
+ FLUSH PRIVILEGES;"
+    WordPress 用 DB・ユーザを作成し権限付与
+
+────────────────────────────────────────
+【5. Apache 仮想ホスト設定】
+────────────────────────────────────────
+mkdir -p /var/www/takatonbo.blog/public_html
+    ドキュメントルートを作成
+chown -R apache:apache /var/www/takatonbo.blog
+    所有権を Apache に変更
+cat >/etc/httpd/conf.d/takatonbo.blog.conf <<'EOF'
+<VirtualHost *:80>
+    ServerName  takatonbo.blog
+    ServerAlias www.takatonbo.blog
+    DocumentRoot /var/www/takatonbo.blog/public_html
+    <Directory "/var/www/takatonbo.blog/public_html">
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
+EOF
+    vhost ファイルを一括作成
+systemctl restart httpd
+    設定を反映し Apache を再起動
+
+────────────────────────────────────────
+【6. WordPress 本体配置】
+────────────────────────────────────────
+cd /tmp
+    作業ディレクトリを /tmp に移動
+curl -LO https://ja.wordpress.org/latest-ja.zip
+    日本語版 WordPress ZIP を取得
+unzip -q latest-ja.zip
+    ZIP を展開（wordpress/ 配下へ）
+rsync -av wordpress/ /var/www/takatonbo.blog/public_html/
+    ファイルをドキュメントルートへコピー
+chown -R apache:apache /var/www/takatonbo.blog/public_html
+    WordPress ファイルの所有権を Apache に
+cp /var/www/takatonbo.blog/public_html/wp-config-sample.php \
+   /var/www/takatonbo.blog/public_html/wp-config.php
+    wp-config.php を生成
+sed -i "s/database_name_here/wp2025/;
+        s/username_here/wpuser2025/;
+        s/password_here/Str0ng_DBpass!/" \
+   /var/www/takatonbo.blog/public_html/wp-config.php
+    DB 情報を書き換え
+curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> \
+   /var/www/takatonbo.blog/public_html/wp-config.php
+    SALT キーを自動挿入
+restorecon -R /var/www/takatonbo.blog/public_html
+    SELinux コンテキストを修復
+
+────────────────────────────────────────
+【7. Let’s Encrypt で HTTPS 化】
+────────────────────────────────────────
+dnf -y install certbot python3-certbot-apache
+    Certbot と Apache プラグインをインストール
+certbot --apache -d takatonbo.blog -d www.takatonbo.blog \
+  -m sparsatakakura@gmail.com --agree-tos --redirect -n
+    証明書取得 → HTTP→HTTPS 自動リダイレクト
+
+────────────────────────────────────────
+【8. ファイアウォール開放】
+────────────────────────────────────────
+firewall-cmd --permanent --add-service=http
+    ポート 80 を恒久許可
+firewall-cmd --permanent --add-service=https
+    ポート 443 を恒久許可
+firewall-cmd --reload
+    設定を反映
+
+────────────────────────────────────────
+【9. ブラウザで WordPress セットアップ】
+────────────────────────────────────────
+https://takatonbo.blog
+    ブラウザでアクセス → サイトタイトル・管理者情報を入力して完了
+────────────────────────────────────────
